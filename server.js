@@ -133,7 +133,7 @@ server.route({
           return Promise.resolve([]);
         }
       }).then(function (data) {
-          if (!data) {
+          if (!data.length) {
             return;
           }
           // Here smart city data is ready to be delivered

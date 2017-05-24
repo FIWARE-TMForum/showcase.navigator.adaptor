@@ -84,7 +84,7 @@ Promise.parallel = function(runnables, pbatchSize) {
         
         errorFunction('Timeout');
       }, DEFAULT_TIMEOUT_PROMISE);
-      
+
       runnables[nextToRun].run().then(resolutionFunction, errorFunction);
     },
 
@@ -122,7 +122,7 @@ Promise.parallel = function(runnables, pbatchSize) {
     all: allPromise,
     futures: parallelGen(runnables, batchSize, futureHandler)
   }
-}
+};
 
 // Auxiliary generator for Promise.parallel
 function* parallelGen(runnables, batchSize, futureHandler) {
@@ -191,8 +191,8 @@ Promise.sequential = function(runnables) {
       });
     }, Promise.resolve());
   });
-}
+};
 
 Promise.sequential2 = function(runnables) {
   return Promise.parallel(runnables, 1);
-}
+};

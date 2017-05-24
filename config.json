@@ -1,18 +1,28 @@
 {
   "serverPort": 7007,
   
-  "rootContextBrokerUrl": "http://130.206.83.68:1026",
+  "rootContextBrokerUrl": "http://ficodes.com:1026",
 
   "here": {
     "geocodingUrl":        "http://geocoder.cit.api.here.com",
     "reverseGeocodingUrl": "http://reverse.geocoder.cit.api.here.com",
     "placesUrl":           "http://places.cit.api.here.com",
     "routeUrl":            "http://route.cit.api.here.com",
-    "appId":               "faqhSeEexrsqMPMVCjj7",
-    "appCode":             "qMR9BDO48F9W-TA8wYlJOw"
+    "appId":               "UX3Sktily2gdvtW502EU",
+    "appCode":             "iU7Qmo4WC9ZE5FAOEYkRBA"
   },
   
   "magicTokenPayment": "businessecosystemmwc",
   
-  "businessFrameworkAPI": "https://demo-mwc.conwet.com/DSProductInventory/api/productInventory/v2/product?productCharacteristic.value=CKAN%20Dataset&fields=productCharacteristic,relatedParty"
+  "businessFrameworkAPI": "https://demo-mwc.conwet.com/DSProductInventory/api/productInventory/v2/product?productCharacteristic.value=CKAN%20Dataset&fields=productCharacteristic,relatedParty",
+
+  "auth": [{
+    "server": "https://195.235.93.224:15001",
+    "user": "",
+    "password": ""
+  }, {
+    "server": "http://130.206.121.52:5001",
+    "user": "dev_poi",
+    "password": "dev_poi_pwd"
+  }]
 }

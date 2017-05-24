@@ -209,7 +209,7 @@ var contextDataMadrid = {
   id: 'madrid-cityconfiguration',
   location: new Orion.Attribute('40.42028,-3.70578', 'geo:point'),
   
-  adressLocality: "Madrid",
+  addressLocality: "Madrid",
   addressCountry: "ESP",
   
   cityBrokers: {
@@ -227,17 +227,25 @@ var contextDataMadrid = {
       },
       entityType: 'WeatherForecast',
       serviceType:   'ngsi-v2'
+    },
+    PointOfInterest: {
+      entityType: 'PointOfInterest',
+      url: 'http://130.206.118.244:1027/v2',
+      serviceType: 'ngsi-v2',
+      authServer: 'http://130.206.121.52:5001',
+      fiwareService: 'poi',
+      fiwareServicePath: '/Spain'
     }
   }
 };
 
 var citiesKeyMap = {
-  'Antwerp'   : contextDataAntwerp,
-  'Porto'     : contextDataPorto,
-  'Madrid'    : contextDataMadrid,
-  'Sevilla'   : contextDataSevilla,
-  'Santander' : contextDataSantander,
-  'Aveiro'    : contextDataAveiro
+  //'Antwerp'   : contextDataAntwerp,
+  //'Porto'     : contextDataPorto,
+  'Madrid'    : contextDataMadrid
+  //'Sevilla'   : contextDataSevilla,
+  //'Santander' : contextDataSantander,
+  //'Aveiro'    : contextDataAveiro
 };
 
 var cityData = [];

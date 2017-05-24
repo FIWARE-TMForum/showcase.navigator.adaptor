@@ -72,7 +72,7 @@ var adaptorsMap = {
   'porto-ParkingLot'      : porto_ParkingLot,
   'porto-Garage'          : porto_Garage,
   'porto-GasStation'      : porto_GasStation
-}
+};
 
 // Adapts Ambient Observed data coming from Porto
 function porto_AmbientObserved(data) {

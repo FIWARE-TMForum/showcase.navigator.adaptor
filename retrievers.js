@@ -29,14 +29,34 @@ NgsiV2Retriever.prototype.run = function() {
   return checkAuthToken.call(this, queryOrionV2);
 };
 
-// Performs a query through NGSIv2
 function queryOrionV2(serviceData, queryData) {
+  if (!serviceData.idm) {
+    return queryOrionV2Data(serviceData, queryData);
+  }
+  
+  return getAuthToken(serviceData).then(function(token) {
+    console.log('Token obtained: ', token);
+    
+    serviceData.token = token;
+    
+    return queryOrionV2Data(serviceData, queryData);
+  }, function token_err(err) {
+      console.error('Error while retrieving token: ', err);
+      return Promise.reject(err);
+  });
+}
+
+// Performs a query through NGSIv2
+function queryOrionV2Data(serviceData, queryData) {
+  console.log(JSON.stringify(serviceData));
+  console.log(JSON.stringify(queryData));
+  
   return new Promise(function(resolve, reject) {
     var q = '';
   
     if (queryData.q) {
       Object.keys(queryData.q).forEach(function(aKey) {
-        q += aKey + '==' + queryData.q[aKey] + ';'
+        q += aKey + '==' + queryData.q[aKey] + ';';
       });
       // Avoid the trailing ';' Orion does not like
       q = q.substring(0, q.length - 1);
@@ -44,13 +64,24 @@ function queryOrionV2(serviceData, queryData) {
     
     if (serviceData.q) {
       Object.keys(serviceData.q).forEach(function(aKey) {
-        q += aKey + ':' + serviceData.q[aKey] + ';'
+        var value = serviceData.q[aKey];
+        if (value.indexOf(',') !== -1 || value.indexOf(' ') !== -1) {
+          value = "'" + value + "'";
+        }
+        q += aKey + ':' + value + ';';
       });
+      // Avoid the trailing ';' Orion does not like
+      q = q.substring(0, q.length - 1);
+    }
+    
+    if (queryData.extraQ) {
+      q += ';' + queryData.extraQ;
     }
     
     var options = {
       baseUrl: serviceData.url,
-      url: '/entities',
+      strictSSL:false,
+      uri: '',
       qs: {
         type: serviceData.entityType,
         options: 'keyValues'
@@ -62,32 +93,39 @@ function queryOrionV2(serviceData, queryData) {
       
       timeout: DEFAULT_TIMEOUT
     };
-
-    if (!!serviceData.serverToken) {
-      options.headers['X-Auth-Token'] = serviceData.serverToken;
-    }
-
-    if (!!serviceData.fiwareService) {
+    
+    // Extra headers service, servicepath and token
+    if (serviceData.fiwareService) {
       options.headers['Fiware-Service'] = serviceData.fiwareService;
     }
-
-    if (!!serviceData.fiwareServicePath) {
-      options.headers['Fiware-ServicePath'] = serviceData.fiwareServicePath;
+    
+    if (serviceData.fiwareServicePath) {
+       options.headers['Fiware-Servicepath'] = serviceData.fiwareServicePath;
     }
-
+    
+    if (serviceData.token) {
+       options.headers['x-auth-token'] = serviceData.token;
+    }
+    
+    if (serviceData.sofia2Token) {
+      options.headers['x-sofia2-apikey'] = serviceData.sofia2Token;
+    }
+    
     if (q.length > 0) {
       options.qs.q = q;
     }
     
     // Check for georel query params
-    if (queryData.georel) {
+    if (!serviceData.noGeoNeeded && queryData.georel) {
       options.qs.georel   = queryData.fullGeoRel;
       options.qs.coords   = queryData.coords;
       options.qs.geometry = queryData.geometry;
       options.qs.orderBy  = 'geo:distance';
     }
     
-    console.log('Orion V2 query', JSON.stringify(options));
+    console.log('NGSI V2 query', JSON.stringify(options));
+    console.log('Headers: ', JSON.stringify(options.headers));
+    
     Request.get(options, function(err, response, body) {      
       if (err) {
         reject(err.message);
@@ -263,6 +301,60 @@ function queryOST(serviceData, requestData) {
     });
   });
 }
+
+function getAuthToken(brokerData) {
+  var tenant = brokerData.fiwareService;
+
+  if (!brokerData.userName) {
+    return Promise.resolve('dummy_token');
+  }
+  
+  return new Promise(function(resolve, reject) {
+    
+    // Payload needed to obtain a token
+    var tokenPayload = {
+      "auth": {
+        "identity": {
+          "methods": ["password"],
+          "password": {
+            "user": {
+              "name": brokerData.userName,
+              "domain": { "name": tenant},
+              "password": brokerData.password
+            }
+          }
+        }
+      }
+    };
+    
+    var requestParameters = {
+      uri: brokerData.idm + '/v3/auth/tokens',
+      method: 'POST',
+      json: tokenPayload
+    };
+
+    Request(requestParameters, function (error, response, body) {
+      if (!error && response.statusCode === 201) {
+        var token = response.headers['x-subject-token'];
+        
+        console.log('Token retrieved: ', token);
+        
+        if (token) {
+          resolve(token);
+        }
+        else {
+          reject('Token not defined');
+        }
+      }
+      else {
+        console.log('HTTP status code returned by getToken: ', response.statusCode);
+        reject(response.statusCode);
+      }
+    });  // Request
+
+  }); // Promise 
+}
+
 
 module.exports.NgsiV2Retriever = NgsiV2Retriever;
 module.exports.NgsiV1Retriever = NgsiV1Retriever;

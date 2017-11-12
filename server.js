@@ -24,8 +24,10 @@ server.connection({
 
 
 const PARKING        = 'Parking';
-const STREET_PARKING = 'StreetParking';
-const PARKING_LOT    = 'ParkingLot';
+const STREET_PARKING = 'OnStreetParking';
+const PARKING_LOT    = 'OffStreetParking';
+
+const WEATHER_FORECAST = 'WeatherForecast';
 
 // Any type. The client indicates that it can accept any entity type
 // provided the user has paid for it
@@ -61,10 +63,11 @@ server.route({
         });
         return;
       }
-      
+      var georel1;
       var maxDistance = -1;
+      
       if (isNear) {
-        var georel1 = geoTokens[0];
+        georel1 = geoTokens[0];
         var georel2 = geoTokens[1];
       
         var distanceParams = georel2.split(':');
@@ -107,7 +110,17 @@ server.route({
         // Adding two specific 
         types = types.concat([STREET_PARKING, PARKING_LOT]);
       }
-       
+
+      var q = '';      
+      if (types.indexOf(WEATHER_FORECAST) !== -1) {
+        var today = new Date();
+        
+        var validFrom = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+        var validTo = validFrom + 'T23:59:00';
+        
+        q = 'validFrom' + '>' + validFrom + ';' + 'validTo' + '<=' + validTo;
+      }
+      
       var requestData = {
         coords:   coords,
         georel:   georel1,
@@ -116,7 +129,8 @@ server.route({
         maxDistance: maxDistance,
         // full georel param (needed for Orion v2 queries)
         fullGeoRel: georel,
-        isAnyType: isAnyType
+        isAnyType: isAnyType,
+        extraQ: q
       };
       
       if (token) {
@@ -133,8 +147,8 @@ server.route({
           return Promise.resolve([]);
         }
       }).then(function (data) {
-          if (!data.length) {
-            return;
+          if (!data || data.length === 0) {
+            return Promise.reject('No config data');
           }
           // Here smart city data is ready to be delivered
           var out = [];
@@ -259,7 +273,10 @@ function getRetriever(brokerData, requestData) {
   if (brokerData.serviceType === 'ngsi-v1') {
     return new Retrievers.NgsiV1Retriever(brokerData, requestData);
   }
-  else if (brokerData.serviceType === 'ngsi-v2') {
+  else if (brokerData.serviceType.startsWith('ngsi-v2')) {
+    if (brokerData.serviceType == 'ngsi-v2-sofia2') {
+      brokerData.sofia2Token = config.sofia2.token;
+    }
     return new Retrievers.NgsiV2Retriever(brokerData, requestData);
   }
   else if (brokerData.serviceType === 'ost') {
@@ -273,8 +290,9 @@ function getEndPointData(coords) {
     getCity(coords).then(function(cityData) {
       console.log('City data:', cityData);
       return new Retrievers.NgsiV2Retriever({
-        url: config.rootContextBrokerUrl + '/v2',
-        entityType: 'CityConfiguration'
+        url: config.rootContextBrokerUrl + '/v2/entities',
+        entityType: 'CityConfiguration',
+        fiwareService: config.configService
       }, {
         q: cityData
       }).run();

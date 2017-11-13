@@ -382,10 +382,10 @@ var contextDataMadrid = {
   id: 'madrid-cityconfiguration',
   location: new Orion.Attribute('40.42028,-3.70578', 'geo:point'),
   addressLocality: "Madrid",
-  addressCountry: "ESP",
+  addressCountry: "Spain",
   
   cityBrokers: {
-    AirQualityObserved: {
+    /*AirQualityObserved: {
         url: 'http://130.206.118.244:1027/v2/entities',
         entityType: 'AirQualityObserved',
         serviceType:   'ngsi-v2',
@@ -394,20 +394,6 @@ var contextDataMadrid = {
         idm: 'http://130.206.121.52:5001',
         userName: 'dev_airquality',
         password: 'dev_airquality_PWD'
-    },
-    WeatherForecast: {
-        url: 'http://130.206.118.244:1027/v2/entities',
-        q: {
-            "address.addressLocality": "Madrid"
-        },
-        noGeoNeeded: true,
-        entityType: 'WeatherForecast',
-        serviceType:   'ngsi-v2',
-        fiwareService: 'weather',
-        fiwareServicePath: '/Spain',
-        idm: 'http://130.206.121.52:5001',
-        userName: 'dev_weather',
-        password: 'dev_weather_PWD'
     },
     WeatherObserved: {
         url: 'http://130.206.118.244:1027/v2/entities',
@@ -425,12 +411,51 @@ var contextDataMadrid = {
     PointOfInterest: {
         url: 'http://130.206.118.244:1027/v2/entities',
         entityType: 'PointOfInterest',
-        serviceType:   'ngsi-v2',
+        serviceType: 'ngsi-v2',
         fiwareService: 'poi',
         fiwareServicePath: '/Spain',
         idm: 'http://130.206.121.52:5001',
         userName: 'dev_poi',
         password: 'dev_poi_pwd'
+    },*/
+    OffStreetParking: {
+      entityType: 'OffStreetParking',
+      url: 'https://context.opplafy.eu/v2/entities',
+      serviceType: 'ngsi-v2',
+      fiwareService: 'madrid',
+      fiwareServicePath: '/transport/parking'
+    },
+    BikeHireDockingStation: {
+        entityType: 'BikeHireDockingStation',
+        url: 'https://context.opplafy.eu/v2/entities',
+        serviceType: 'ngsi-v2',
+        fiwareService: 'madrid',
+        fiwareServicePath: '/transport/bikes'
+    },
+    TrafficCamera: {
+      entityType: 'TrafficCamera',
+      url: 'https://context.opplafy.eu/v2/entities',
+      serviceType: 'ngsi-v2',
+      fiwareService: 'madrid',
+      fiwareServicePath: '/transport/cameras'
+    },
+    CityIssue: {
+      entityType: 'CityIssue',
+      url: 'https://proxy.opplafy.eu/ficodes/v2/entities',
+      serviceType: 'ngsi-v2',
+      fiwareService: 'madrid',
+      fiwareServicePath: '/transport/issues'
+    },
+    WeatherForecast: {
+      url: 'https://context.opplafy.eu/v2/entities',
+      q: {
+        "address.addressLocality": "Madrid"
+      },
+      noGeoNeeded: true,
+      entityType: 'WeatherForecast',
+      serviceType:   'ngsi-v2',
+      fiwareService: 'spain',
+      fiwareServicePath: '/weather/forecast'
     }
   }
 };

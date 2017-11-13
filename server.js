@@ -349,7 +349,7 @@ function getCity(coords) {
 
       var cityInfo = {
         addressLocality: address.City,
-        addressCountry: address.Country
+        addressCountry: 'Spain'
       };
       
       resolve(cityInfo);

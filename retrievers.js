@@ -1,24 +1,9 @@
 'use strict';
 
-const auth = require('./auth');
 const Request = require('request');
 const adaptorsMap = require('./adaptors.js');
 
 const DEFAULT_TIMEOUT = 5000;
-
-function checkAuthToken(queryMethod) {
-  if (!!this.serviceData.authServer) {
-    // If an auth server is included the request must be authenticated
-    return auth.getKeystoneToken(this.serviceData.authServer, this.serviceData.fiwareService).then((token) => {
-      // Inject new access token
-      this.serviceData.serverToken = token;
-      return queryMethod(this.serviceData, this.queryData);
-    });
-
-  } else {
-    return queryMethod(this.serviceData, this.queryData);
-  }
-}
 
 function NgsiV2Retriever(serviceData, queryData) {
   this.serviceData = serviceData;
@@ -26,7 +11,7 @@ function NgsiV2Retriever(serviceData, queryData) {
 }
 
 NgsiV2Retriever.prototype.run = function() {
-  return checkAuthToken.call(this, queryOrionV2);
+    return queryOrionV2(this.serviceData, this.queryData);
 };
 
 function queryOrionV2(serviceData, queryData) {
@@ -152,32 +137,28 @@ function NgsiV1Retriever(serviceData, queryData) {
 }
 
 NgsiV1Retriever.prototype.run = function() {
-  return checkAuthToken.call(this, handleOrionV1);
-};
-
-function handleOrionV1(serviceData, queryData) {
-  return new Promise((resolve, reject) => {
-    queryOrionV1(serviceData, queryData).then((data) => {
-      var out = data;
-      if (!out) {
+    return new Promise((resolve, reject) => {
+        queryOrionV1(serviceData, queryData).then((data) => {
+        var out = data;
+    if (!out) {
         resolve([]);
         return;
-      }
+    }
 
-      if (!Array.isArray(out)) {
+    if (!Array.isArray(out)) {
         out = [out];
-      }
+    }
 
-      var adapter = this.serviceData.adapterKey;
-      if (adapter) {
+    var adapter = this.serviceData.adapterKey;
+    if (adapter) {
         console.log('Adapter: ', adapter);
         out = adaptorsMap[adapter](out);
-      }
+    }
 
-      resolve(out);
-    }, (error) => reject);
-  });
-}
+    resolve(out);
+}, (error) => reject);
+});
+};
 
 // Performs a query through NGSIv1
 function queryOrionV1(serviceData, queryData) {
@@ -225,24 +206,20 @@ function OstRetriever(serviceData, queryData) {
 }
 
 OstRetriever.prototype.run = function() {
-  return checkAuthToken.call(this, handleOST);
-};
-
-function handleOST(serviceData, requestData) {
-  return new Promise((resolve, reject) => {
-    queryOST(serviceData, requestData).then((data) => {
-      var out = data;
-      var adapter = this.serviceData.adapterKey;
-      if (adapter) {
+    return new Promise((resolve, reject) => {
+        queryOST(serviceData, requestData).then((data) => {
+        var out = data;
+    var adapter = this.serviceData.adapterKey;
+    if (adapter) {
         console.log('Adapter: ', adapter);
         out = adaptorsMap[adapter](data);
-      }
+    }
 
-      resolve(out);
-    }, (error) => reject);
-  });
-  return
-}
+    resolve(out);
+}, (error) => reject);
+});
+    return
+};
 
 // Performs a query through Porto OST service
 function queryOST(serviceData, requestData) {

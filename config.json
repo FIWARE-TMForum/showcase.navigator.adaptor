@@ -1,8 +1,8 @@
 {
   "serverPort": 7007,
   
-  "rootContextBrokerUrl": "http://130.206.121.52:1026",
-  "configService": "GreenCities",
+  "rootContextBrokerUrl": "https://context.opplafy.eu",
+  "configService": "opplafy",
   
   "sofia2": {
     "token": ""

@@ -33,7 +33,10 @@ function queryOrionV2(serviceData, queryData) {
 
 // Performs a query through NGSIv2
 function queryOrionV2Data(serviceData, queryData) {
+  console.log("================== Service Data: ===============================");
   console.log(JSON.stringify(serviceData));
+
+  console.log("================== Query Data Data: ===============================");
   console.log(JSON.stringify(queryData));
   
   return new Promise(function(resolve, reject) {
@@ -88,8 +91,8 @@ function queryOrionV2Data(serviceData, queryData) {
        options.headers['Fiware-Servicepath'] = serviceData.fiwareServicePath;
     }
     
-    if (serviceData.token) {
-       options.headers['x-auth-token'] = serviceData.token;
+    if (queryData.token) {
+       options.headers['X-Auth-Token'] = queryData.token;
     }
     
     if (serviceData.sofia2Token) {

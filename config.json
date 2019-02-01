@@ -1,7 +1,7 @@
 {
   "serverPort": 7007,
   
-  "rootContextBrokerUrl": "https://context.opplafy.eu",
+  "rootContextBrokerUrl": "http://localhost:1026",
   "configService": "opplafy",
   
   "sofia2": {
@@ -13,8 +13,8 @@
     "reverseGeocodingUrl": "http://reverse.geocoder.cit.api.here.com",
     "placesUrl":           "http://places.cit.api.here.com",
     "routeUrl":            "http://route.cit.api.here.com",
-    "appId":               "UX3Sktily2gdvtW502EU",
-    "appCode":             "iU7Qmo4WC9ZE5FAOEYkRBA"
+    "appId":               "<>",
+    "appCode":             "<>"
   },
   
   "magicTokenPayment": "businessecosystemmwc",

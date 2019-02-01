@@ -135,38 +135,34 @@ var contextDataSantander = {
   
   location: new Orion.Attribute('43.46156,-3.81006', 'geo:point'),
   addressLocality: "Santander",
-  addressCountry: "ESP",
+  addressCountry: "Spain",
   
   cityBrokers: {
     OnStreetParking: {
-      url: 'http://130.206.121.52:1026/v2/entities',
+      url: 'http://context.san.synchronicity-iot.eu/v2/entities',
       entityType: 'OnStreetParking',
-      fiwareService: 'santander',
-      fiwareServicePath: '/parking',
-      serviceType: 'ngsi-v2'
+      serviceType: 'ngsi-v2',
+      token: '<Insert a token>'
     },
-    /*
     OffStreetParking: {
-      url:     'http://mu.tlmat.unican.es:8099/v1',
-      pattern: 'urn:x-iot:smartsantander:parking:indoor.*',
-      serviceType:  'ngsi-v1',
-      entityType:  'ParkingLot',
-      fiwareService: 'smartsantander',
-      fiwareServicePath: '/parking/#'
+      url: 'http://context.san.synchronicity-iot.eu/v2/entities',
+      entityType: 'OffStreetParking',
+      serviceType: 'ngsi-v2',
+      token: '<Insert a token>'
     },
     AirQualityObserved: {
-      url:     'http://mu.tlmat.unican.es:8099/v1',
-      serviceType: 'ngsi-v1',
-      entityType:  'AmbientObserved',
-      pattern: 'urn:x-iot:smartsantander:environmental:mobile.*',
-      fiwareService: 'smartsantander'
+      url: 'http://context.san.synchronicity-iot.eu/v2/entities',
+      entityType: 'AirQualityObserved',
+      serviceType: 'ngsi-v2',
+      token: '<Insert a token>'
     },
-    District: {
-      url: 'http://mu.tlmat.unican.es:8099/v1',
-      entityType: 'AmbientArea',
-      serviceType: 'ngsi-v1',
-      fiwareService: 'smartsantander'
-    }, */
+    PointOfInterest: {
+      url: 'http://context.san.synchronicity-iot.eu/v2/entities',
+      entityType: 'PointOfInterest',
+      serviceType: 'ngsi-v2',
+      token: '<Insert a token>'
+    },
+    /*
     PointOfInterest: {
       url: 'http://130.206.118.244:1027/v2/entities',
       entityType: 'PointOfInterest',
@@ -204,6 +200,7 @@ var contextDataSantander = {
         userName: 'dev_weather',
         password: 'dev_weather_PWD'
     }
+    */
   }
 };
 
@@ -464,9 +461,9 @@ var contextDataMadrid = {
 var citiesKeyMap = {
   //'Antwerp'   : contextDataAntwerp,
   //'Porto'     : contextDataPorto,
-  'Madrid'    : contextDataMadrid
+  'Madrid'    : contextDataMadrid,
   //'Sevilla'   : contextDataSevilla,
-  //'Santander' : contextDataSantander,
+  'Santander' : contextDataSantander,
   //'Aveiro'    : contextDataAveiro
 };
 

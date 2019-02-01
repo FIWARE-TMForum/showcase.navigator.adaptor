@@ -8,8 +8,14 @@
 
 var Orion = require('fiware-orion-client');
 var ORION_SERVER = 'https://context.opplafy.eu/v1';
+
+var server = ORION_SERVER;
+if (process.argv.length > 2) {
+  server = process.argv[2] + '/v1';
+}
+
 var OrionClient = new Orion.Client({
-  url: ORION_SERVER,
+  url: server,
   userAgent: 'fiware-here-adapter',
   service: 'opplafy'
 });

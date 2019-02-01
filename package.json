@@ -25,7 +25,8 @@
   "homepage": "https://github.com/jmcanterafonseca/showcase.navigator.adaptor#readme",
   "dependencies": {
     "fiware-orion-client": "^0.5.9",
-    "hapi": "^16.3.0",
-    "joi": "^10.5.2"
+    "hapi": "^16.7.0",
+    "joi": "^10.6.0",
+    "request": "^2.88.0"
   }
 }
